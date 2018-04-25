@@ -1,5 +1,6 @@
 import React from 'react';
 import firebase from 'helpers/firebase';
+import * as moviedb from 'helpers/moviedb';
 import TopBar from 'components/page-elements/TopBar';
 import MyStuff from 'components/page/MyStuff';
 
@@ -28,6 +29,9 @@ export default class App extends React.Component {
     } else{
       this.setState((p) => ({...p, isSignedIn: false, user: ''}));
     }
+  }
+  componentWillMount(){
+    moviedb.test();
   }
   render() {
     return(
