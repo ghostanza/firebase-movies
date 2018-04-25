@@ -8,7 +8,7 @@ export default class MyStuff extends React.Component {
       newItem: '',
       items: []
     }
-    this.state.db.limitToLast(12).on('child_added', (d) => {
+    this.state.db.on('child_added', (d) => {
       var currentItems = Array.from(this.state.items);
       currentItems.push(d.val());
       this.setState((p) => ({...p, items: currentItems}));
