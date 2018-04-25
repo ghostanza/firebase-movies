@@ -1,0 +1,42 @@
+html, body {
+  color: #222;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif; }
+
+.main-container {
+  padding-top: 40px;
+  text-align: center; }
+
+.top-bar {
+  position: fixed;
+  background: black;
+  color: white;
+  height: 40px;
+  top: 0;
+  width: 100%;
+  text-align: right; }
+  .top-bar div {
+    display: inline-block;
+    line-height: 40px;
+    margin: 0px 20px; }
+  .top-bar .user-name {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px; }
+
+.login-btn {
+  cursor: pointer;
+  margin: 20px 0;
+  padding-left: 10px;
+  max-width: 150px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: bold;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: all 0.3s; }
+  .login-btn:hover {
+    color: white; }
