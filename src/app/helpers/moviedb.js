@@ -63,7 +63,7 @@ module.exports.discover = (type, options) => {
     'min_user_rating' : 'vote_average.gte',
     'page' : 'page',
     'sort_by' : 'sort_by'
-  }
+  };
   let optionsQuery = '',
       optionsLength = Object.keys(options).length,
       count = 0;
@@ -78,7 +78,11 @@ module.exports.discover = (type, options) => {
         // determine if this should use "AND" instead of "OR"
         tmp += options[option].join(',');
       } else{
-        tmp += options[option]
+        if(option == 'min_user_rating'){
+          // if you're searching by rating, make sure the listing has at least 10 ratings
+          tmp += `${options[option]}&vote_count.gte=10`;
+        }
+        else { tmp += options[option] }
       }
       optionsQuery += tmp
     }
