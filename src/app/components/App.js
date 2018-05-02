@@ -45,17 +45,21 @@ export default class App extends React.Component {
     moviedb.test();
   }
   render() {
+    let { user, isSearching, searchTerm, searchResults, isSignedIn } = this.state;
     return(
       <div className='main-container'>
         <TopBar
-          isSignedIn={this.state.isSignedIn}
+          isSignedIn={isSignedIn}
           signIn={this.signIn.bind(this)}
           signOut={this.signOut.bind(this)}
-          userName={this.state.user.displayName || ''}
+          userName={user.displayName || ''}
           toggleSearching={this.toggleSearching.bind(this)}
           updateSearchResults={this.searchResults.bind(this)}
           />
-        {this.state.user && !this.state.isSearching ? (<Dashboard user={this.state.user} firebase={firebase}/>) : this.state.user ? (<SearchResults results={this.state.searchResults} term={this.state.searchTerm}/>) : 'CLICK TO LOG IN'}
+        { user && !isSearching ?
+          (<Dashboard user={user} firebase={firebase}/>)
+          : user ? (<SearchResults results={searchResults} term={searchTerm} uid={user.uid} firebase={firebase}/>)
+          : 'CLICK TO LOG IN'}
       </div>
     );
   }
