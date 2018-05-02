@@ -90,6 +90,24 @@ module.exports.discover = (type, options) => {
   return axios.get(`${apiURL}/discover/${type}?${optionsQuery}&api_key=${apiKey}`);
 }
 
+module.exports.formatReleaseDate = (dateString) => {
+  let d = new Date(dateString),
+      months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+      monthIndex = d.getMonth(),
+      dateNum = d.getUTCDate(),
+      year = d.getFullYear();
+
+  return {
+    raw: dateString,
+    string: `${months[monthIndex]} ${dateNum}, ${year}`,
+    month_name: months[monthIndex],
+    month_num: monthIndex + 1,
+    date_num: dateNum,
+    year: year
+  };
+}
+
+
 module.exports.test = () => {
   module.exports.search('terrifier').then((r) => {
     if(r.data && r.data.results){
