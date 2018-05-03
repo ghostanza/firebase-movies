@@ -17,7 +17,7 @@ export default class App extends React.Component {
       searchTerm: '',
     }
     if(firebase!=undefined){
-      firebase.auth().onAuthStateChanged(this.updateSignedIn.bind(this))
+      firebase.auth().onAuthStateChanged(this.updateSignedIn.bind(this));
     }
   }
   signIn(){
@@ -26,10 +26,12 @@ export default class App extends React.Component {
     firebase.auth().signInWithPopup(provider);
   }
   signOut(){
+    firebase.database().ref(`users/${this.state.user.uid}/online`).set(false);
     firebase.auth().signOut();
   }
   updateSignedIn(user){
     if(user){
+      firebase.database().ref(`users/${user.uid}/online`).set(true);
       this.setState((p) => ({...p, isSignedIn: true, user}));
     } else{
       this.setState((p) => ({...p, isSignedIn: false, user: ''}));
