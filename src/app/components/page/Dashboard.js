@@ -11,7 +11,7 @@ export default class Dashboard extends React.Component {
     }
   }
   componentDidMount(){
-    db(`users/${this.props.user.uid}/library`).orderByChild('added').on('value', (movies) => {
+    db(`users/${this.props.user.uid}/library`).orderByChild('added_desc').on('value', (movies) => {
       if(movies){
         let movieIDs = [],
             lib = {},
@@ -52,7 +52,7 @@ export default class Dashboard extends React.Component {
                 <li key={movie.id}>
                   {movie.image_src ? (<img src={movie.image_src}/>) : (<div className='placeholder'>No Image</div>)}
                   <p>{movie.title || ''}</p>
-                  {library[movie.id].added ? (<p>Added on {library[movie.id].added}</p>): ''}
+                  {library[movie.id].added ? (<p>Added on {new Date(library[movie.id].added).toLocaleDateString()}</p>): ''}
                 </li>)
             })}
           </ul>

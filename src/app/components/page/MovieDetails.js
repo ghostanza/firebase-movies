@@ -21,7 +21,8 @@ export default class MovieDetails extends React.Component {
       e.target.classList.add('loading');
       let added = new Date();
       added = added.getTime();
-      db(`users/${this.props.uid}/library/${this.props.data.id}`).set({added});
+      let added_desc = 0 - added;
+      db(`users/${this.props.uid}/library/${this.props.data.id}`).set({added, added_desc});
     }
   }
   render() {
