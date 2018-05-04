@@ -6,27 +6,32 @@ export default class Dashboard extends React.Component {
   constructor(p){
     super(p);
     this.state = {
-      library: '',
+      library: [],
       movieData: [],
     }
   }
   componentDidMount(){
-    db(`users/${this.props.user.uid}/library`).on('value', (data) => {
-      let movies = data.val();
+    db(`users/${this.props.user.uid}/library`).orderByChild('added').once('value', (movies) => {
       if(movies){
-        this.setState((pp)=>({...pp, library: movies}));
-        Object.keys(movies).forEach((movieID) => {
-          moviedb.getInfo('movie', movieID).then((info) => {
-            if(info && info.data){
-              let tmp = info.data,
-                  tmpState = Array.from(this.state.movieData);
+        let movieIDs = [],
+            lib = {},
+            movieData = [];
+        movies.forEach((movie) => {
+          movieIDs.push(movie.key);
+          lib[movie.key] = movie.val();
+        });
+        this.setState((p)=>({...p, library: lib}));
+        Promise.all(movieIDs.map((id) => moviedb.getInfo('movie', id))).then((res) => {
+          res.forEach((d) => {
+            if(d.data){
+              let tmp = d.data;
               if(tmp.poster_path){
                 tmp.image_src = moviedb.createPosterURL(tmp.poster_path, 'medium');
               }
-              tmpState.push(tmp);
-              this.setState((op)=>({...op, movieData: tmpState}));
+              movieData.push(tmp);
             }
           });
+          this.setState((p) => ({...p, movieData}));
         });
       }
     });
@@ -37,16 +42,17 @@ export default class Dashboard extends React.Component {
   }
 
   render() {
+    let { movieData, library } = this.state;
     return(
       <div className='dashboard'>
-        { this.state.library && this.state.movieData.length ? (
+        { Object.keys(library).length && movieData.length && Object.keys(library).length == movieData.length ? (
           <ul>
-            {this.state.movieData.map((movie) => {
+            {movieData.map((movie) => {
               return (
                 <li key={movie.id}>
                   {movie.image_src ? (<img src={movie.image_src}/>) : (<div className='placeholder'>No Image</div>)}
                   <p>{movie.title || ''}</p>
-                  {this.state.library[movie.id].added ? (<p>Added on {this.state.library[movie.id].added}</p>): ''}
+                  {library[movie.id].added ? (<p>Added on {library[movie.id].added}</p>): ''}
                 </li>)
             })}
           </ul>
