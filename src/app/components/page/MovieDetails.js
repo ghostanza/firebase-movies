@@ -20,7 +20,7 @@ export default class MovieDetails extends React.Component {
     else{
       e.target.classList.add('loading');
       let added = new Date();
-      added = added.toLocaleDateString();
+      added = added.getTime();
       db(`users/${this.props.uid}/library/${this.props.data.id}`).set({added});
     }
   }
