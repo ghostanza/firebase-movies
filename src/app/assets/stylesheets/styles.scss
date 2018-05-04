@@ -46,7 +46,7 @@ html, body{
   }
 }
 
-.search-results{
+.search-results, .dashboard{
   & ul{
     list-style: none;
     margin: 0 auto;
@@ -63,8 +63,7 @@ html, body{
     width: 20%;
     box-sizing: border-box;
     & img, .placeholder{
-      height: 250px;
-      width: auto;
+      max-height: 300px;
       max-width: 100%;
     }
   }
