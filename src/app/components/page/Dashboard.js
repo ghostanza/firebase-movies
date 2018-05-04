@@ -11,7 +11,7 @@ export default class Dashboard extends React.Component {
     }
   }
   componentDidMount(){
-    db(`users/${this.props.user.uid}/library`).orderByChild('added').once('value', (movies) => {
+    db(`users/${this.props.user.uid}/library`).orderByChild('added').on('value', (movies) => {
       if(movies){
         let movieIDs = [],
             lib = {},
@@ -21,7 +21,7 @@ export default class Dashboard extends React.Component {
           lib[movie.key] = movie.val();
         });
         this.setState((p)=>({...p, library: lib}));
-        Promise.all(movieIDs.map((id) => moviedb.getInfo('movie', id))).then((res) => {
+        moviedb.getInfoMulti(movieIDs).then((res) => {
           res.forEach((d) => {
             if(d.data){
               let tmp = d.data;

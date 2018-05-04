@@ -32,8 +32,11 @@ module.exports.createPosterURL = (imgPath, size) => {
 }
 
 /*** General Information Based on IDs ***/
-module.exports.getInfo = (type, id) => {
+module.exports.getInfo = (id, type = 'movie') => {
   return axios.get(`${apiURL}/${type}/${id}?api_key=${apiKey}`);
+}
+module.exports.getInfoMulti = (ids, type = 'movie') => {
+  return Promise.all(ids.map((id) => module.exports.getInfo(id, type)));
 }
 module.exports.getImagesFor = (type, id) => {
   return axios.get(`${apiURL}/${type}/${movieID}/images?api_key=${apiKey}`);
@@ -116,7 +119,7 @@ module.exports.test = () => {
       let id = r.data.results[0].id,
           title = r.data.results[0].title;
       console.log(`Fetching Info for ${title} (ID: ${id})...`);
-      module.exports.getInfo('movie', id).then((d) => {
+      module.exports.getInfo(id).then((d) => {
         if(d.data){
           console.log(`MOVIE DATA FOR ${title}: `, d.data);
         }
