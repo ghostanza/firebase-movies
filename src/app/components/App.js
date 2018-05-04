@@ -1,5 +1,5 @@
 import React from 'react';
-import firebase from 'helpers/firebase';
+import * as firebase from 'helpers/firebase';
 import * as moviedb from 'helpers/moviedb';
 import TopBar from 'components/page-elements/TopBar';
 import MyStuff from 'components/page/MyStuff';
@@ -9,6 +9,7 @@ import SearchResults from 'components/page/SearchResults';
 export default class App extends React.Component {
   constructor(p){
     super(p);
+    firebase.init();
     this.state = {
       isSignedIn: false,
       user: '',
@@ -17,21 +18,18 @@ export default class App extends React.Component {
       searchTerm: '',
     }
     if(firebase!=undefined){
-      firebase.auth().onAuthStateChanged(this.updateSignedIn.bind(this));
+      firebase.onAuthStateChanged(this.updateSignedIn.bind(this));
     }
   }
   signIn(){
-    var provider = new firebase.auth.GoogleAuthProvider();
-    provider.setCustomParameters({prompt: 'select_account'});
-    firebase.auth().signInWithPopup(provider);
+    firebase.signInWithGoogle();
   }
   signOut(){
-    firebase.database().ref(`users/${this.state.user.uid}/online`).set(false);
-    firebase.auth().signOut();
+    firebase.signOut(this.state.user.uid);
   }
   updateSignedIn(user){
     if(user){
-      firebase.database().ref(`users/${user.uid}/online`).set(true);
+      firebase.db(`users/${user.uid}/online`).set(true);
       this.setState((p) => ({...p, isSignedIn: true, user}));
     } else{
       this.setState((p) => ({...p, isSignedIn: false, user: ''}));
@@ -59,8 +57,8 @@ export default class App extends React.Component {
           updateSearchResults={this.searchResults.bind(this)}
           />
         { user && !isSearching ?
-          (<Dashboard user={user} firebase={firebase}/>)
-          : user ? (<SearchResults results={searchResults} term={searchTerm} uid={user.uid} firebase={firebase}/>)
+          (<Dashboard user={user}/>)
+          : user ? (<SearchResults results={searchResults} term={searchTerm} uid={user.uid}/>)
           : 'CLICK TO LOG IN'}
       </div>
     );

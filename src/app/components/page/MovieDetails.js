@@ -1,13 +1,13 @@
 import React from 'react';
+import {db} from 'helpers/firebase';
 
 export default class MovieDetails extends React.Component {
   constructor(p){
     super(p);
     this.state = {
-      db: p.firebase.database().ref(`users/${p.uid}/library/${p.data.id}`),
       existingData: ''
     }
-    this.state.db.on('value', (snapshot) => {
+    db(`users/${p.uid}/library/${p.data.id}`).on('value', (snapshot) => {
       if(snapshot.val()){
         this.setState((p) => ({...p, existingData: snapshot.val()}));
       }
@@ -21,7 +21,7 @@ export default class MovieDetails extends React.Component {
       e.target.classList.add('loading');
       let added = new Date();
       added = added.toLocaleDateString();
-      this.state.db.set({added});
+      db(`users/${this.props.uid}/library/${this.props.data.id}`).set({added});
     }
   }
   render() {

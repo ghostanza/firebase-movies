@@ -1,16 +1,17 @@
 import React from 'react';
 import * as moviedb from 'helpers/moviedb';
+import {db} from 'helpers/firebase';
 
 export default class Dashboard extends React.Component {
   constructor(p){
     super(p);
     this.state = {
       library: '',
-      db: p.firebase.database().ref(`users/${this.props.user.uid}`),
       movieData: [],
     }
-
-    this.state.db.child('library').on('value', (data) => {
+  }
+  componentDidMount(){
+    db(`users/${this.props.user.uid}/library`).on('value', (data) => {
       let movies = data.val();
       if(movies){
         this.setState((pp)=>({...pp, library: movies}));
@@ -29,6 +30,10 @@ export default class Dashboard extends React.Component {
         });
       }
     });
+  }
+  componentWillUnmount(){
+    // to avoid trying to update the state when it unmounts
+    db(`users/${this.props.user.uid}/library`).off('value');
   }
 
   render() {

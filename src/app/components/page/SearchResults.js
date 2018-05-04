@@ -39,7 +39,7 @@ export default class SearchResults extends React.Component {
     return(
       <div className='search-results'>
         {this.state.details ?
-          (<MovieDetails data={this.state.details} back={this.showListings.bind(this)} uid={this.props.uid} firebase={this.props.firebase}/>)
+          (<MovieDetails data={this.state.details} back={this.showListings.bind(this)} uid={this.props.uid}/>)
           : (<Listing items={results} term={this.props.term}/>)}
       </div>)
   }

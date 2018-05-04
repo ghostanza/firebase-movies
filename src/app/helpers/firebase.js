@@ -7,6 +7,26 @@ const config = {
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
     messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID
 };
-firebase.initializeApp(config);
 
-export default firebase;
+module.exports.init = () => {
+  firebase.initializeApp(config);
+}
+
+module.exports.db = (path) => {
+  return firebase.database().ref(path);
+}
+module.exports.signInWithGoogle = () => {
+  var provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({prompt: 'select_account'});
+  firebase.auth().signInWithPopup(provider);
+}
+module.exports.signOut = (userID) => {
+  if(userID){
+    firebase.database().ref(`users/${userID}/online`).set(false);
+  }
+  firebase.auth().signOut();
+}
+
+module.exports.onAuthStateChanged = (callback) => {
+  firebase.auth().onAuthStateChanged(callback);
+}
